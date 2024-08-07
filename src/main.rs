@@ -121,17 +121,18 @@ pub fn test(height:i32, width:i32){
     let mut out = prelude::Image::gen_image_color(width,height, Color::BLACK);
     let state = StateVec::new(Vector2::zero(), Vector2::zero());
     let tmp = state.get_density_func();
+    let scale = 0.01;
     for y0 in 0..height{
         for x0 in 0..width{
             let x = x0 as f64-width as f64/2.0;
             let y = y0 as f64-height as f64/2.0;
-            let v = Vector2::new(x,y);
+            let v = Vector2::new(x,y)*scale;
             let p = tmp(v);
             let col = (p *255.0) as u8;
             out.draw_pixel(x0,y0, Color{r:col,g:col, b:col, a:255});
         }
     }
-    let area = area_integration(AxisAlignedRect{x:-500.0, y:-500.0, w:1000.0, h:1000.0},2.0,&tmp);
+    let area = area_integration(AxisAlignedRect{x:-500.0*scale, y:-500.0*scale, w:1000.0*scale, h:1000.0*scale},2.0,&tmp);
     println!("{area}");
     out.export_image("test.png");
 }
