@@ -77,7 +77,8 @@ impl StateVec{
         return Self{location, velocity, density_func:base_distrib_func};
     }
     pub fn sample_density(&self,point:Vector2)->f64{
-        return ((self.density_func))(point-self.location);
+        let p = point-self.location;
+        return ((self.density_func))(p);
     }
     pub fn get_density_func(&self)-> impl Fn (Vector2)->f64{
         let density_func = self.density_func;
@@ -109,19 +110,12 @@ pub fn area_integration(rect:AxisAlignedRect,resolution:f64,function:&impl Fn(Ve
     }
     return out;
 }
-fn _test_area (point:Vector2)->f64{
-    fn func(base:f64)->f64{
-        let scale:f64 = 1.0;
-        let sx =base*scale;
-        return f64::exp(-PI*sx*sx);
-    }
-    func(point.x)*func(point.y)
-}
+
 pub fn test(height:i32, width:i32){
     let mut out = prelude::Image::gen_image_color(width,height, Color::BLACK);
     let state = StateVec::new(Vector2::zero(), Vector2::zero());
     let tmp = state.get_density_func();
-    let scale = 0.01;
+    let scale = 0.005;
     for y0 in 0..height{
         for x0 in 0..width{
             let x = x0 as f64-width as f64/2.0;
@@ -132,7 +126,7 @@ pub fn test(height:i32, width:i32){
             out.draw_pixel(x0,y0, Color{r:col,g:col, b:col, a:255});
         }
     }
-    let area = area_integration(AxisAlignedRect{x:-500.0*scale, y:-500.0*scale, w:1000.0*scale, h:1000.0*scale},2.0,&tmp);
+    let area = area_integration(AxisAlignedRect{x:-500.0*scale, y:-500.0*scale, w:1000.0*scale, h:1000.0*scale},2.0/scale,&tmp);
     println!("{area}");
     out.export_image("test.png");
 }
