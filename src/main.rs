@@ -88,11 +88,6 @@ impl StateVec{
     }
 }
 
-pub struct DistributionFunc{
-    func:Box<dyn Fn(Vector2)->f64>
-}
-impl Call for DistributionFunc{
-}
 pub fn area_integration(rect:AxisAlignedRect,resolution:f64,function:&impl Fn(Vector2)->f64)->f64{
     fn single_area_calc(x0:f64,y0:f64,x1:f64,y1:f64,disp_x: f64,disp_y: f64, function:&impl Fn(Vector2)->f64)->f64{
         let mid_x = (x0+x1)/2.0;
